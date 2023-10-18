@@ -2,6 +2,7 @@
 TL;DR: App reads temperature values from sensors built-in the device.
 
 **Functions description**
+
 On the main screen:
 
 Thread - turning on this option creates a thread for recording method. It may help with measuring in the background.
