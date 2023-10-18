@@ -8,6 +8,7 @@ class UniqueSensorsViewModel(private val repository: UniqueSensorsRepository) : 
     val getPathName: Array<String> = repository.PathName
     val getPathTemp: Array<String> = repository.PathTemp
     val getToRead: Array<Boolean> = repository.ToRead
+    val getName: Array<String> = repository.SensorName
 
     fun insert(sensors: UniqueSensors) = viewModelScope.launch {
         repository.insert(sensors)

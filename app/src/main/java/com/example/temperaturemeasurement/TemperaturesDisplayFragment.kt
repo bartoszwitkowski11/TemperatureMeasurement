@@ -2,13 +2,10 @@ package com.example.temperaturemeasurement
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Context.POWER_SERVICE
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
-import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.view.*
@@ -16,27 +13,25 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.temperaturemeasurement.TemperaturesDatabase.Temperatures
 import com.example.temperaturemeasurement.UniqueSensorsDatabase.UniqueSensors
 import com.example.temperaturemeasurement.UniqueSensorsDatabase.UniqueSensorsViewModel
 import com.example.temperaturemeasurement.UniqueSensorsDatabase.UniqueSensorsViewModelFactory
-import com.example.temperaturemeasurement.TemperaturesDatabase.Temperatures
 import com.example.temperaturemeasurement.databinding.TemperaturesReadListBinding
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.leinardi.android.speeddial.SpeedDialView
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.InputStreamReader
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -53,7 +48,7 @@ class TemperaturesDisplayFragment : Fragment() {
     private var startWakelock = false
     private var counter = 0
 
-    lateinit var temperaturesList : List<Temperatures>
+    lateinit var temperaturesList : MutableList<Temperatures>
     lateinit var sensorsList : List<UniqueSensors>
     lateinit var sharedPref : SharedPreferences
     lateinit var prefEditor : SharedPreferences.Editor
@@ -89,7 +84,7 @@ class TemperaturesDisplayFragment : Fragment() {
 
             Thread(Runnable {
                 Log.e("EXPORTING TO CSV THREAD", "start")
-                temperaturesList = temperaturesViewModel.getTemperaturesList()
+                temperaturesList = temperaturesViewModel.getTemperaturesList().toMutableList()
                 exportDatabaseToCSVFile()
             }, "ExportCSV").start()
 
@@ -105,6 +100,7 @@ class TemperaturesDisplayFragment : Fragment() {
                                 stopMeasurement()
                             }
                             temperaturesViewModel.deleteAll()
+                            temperaturesList.clear()
                             Toast.makeText(requireContext(), "Database is erased", Toast.LENGTH_LONG).show()
                         }
                         DialogInterface.BUTTON_NEGATIVE -> {}
@@ -296,7 +292,7 @@ class TemperaturesDisplayFragment : Fragment() {
 
             temperaturesViewModel.allTemperatures.observe(viewLifecycleOwner) { temperatures ->
                 //temperatures.let { adapter.submitList(it) }
-                temperaturesList = temperatures
+                temperaturesList = temperatures.toMutableList()
             }
 
             uniqueSensorsViewModel.allSensors.observe(viewLifecycleOwner) { sensors ->
@@ -445,7 +441,7 @@ class TemperaturesDisplayFragment : Fragment() {
 
     private fun settingsToDb() {
         val timestamp = System.currentTimeMillis() / 1000
-        val insert = Temperatures("Wakelock: ${sharedPref.getBoolean("startWakelock", startWakelock)}", "Display: ${sharedPref.getBoolean("startDisplaying", startDisplaying)}", "Thread: ${sharedPref.getBoolean("startThread", startThread)}", "Service: ${sharedPref.getBoolean("isServiceStarted", isServiceStarted)}", timestamp)
+        val insert = Temperatures("Wakelock: ${sharedPref.getBoolean("startWakelock", startWakelock)}", "Service: ${sharedPref.getBoolean("isServiceStarted", isServiceStarted)}", "Thread: ${sharedPref.getBoolean("startThread", startThread)}", "Flags", timestamp)
         temperaturesViewModel.insert(insert)
     }
 
@@ -504,6 +500,52 @@ class TemperaturesDisplayFragment : Fragment() {
     }
 
     private fun exportDatabaseToCSVFile() {
+        val folderName = android.os.Build.BRAND + "_" + android.os.Build.MODEL.toString() + "_" + (System.currentTimeMillis() / 1000).toString()
+        for (item in temperaturesViewModel.getName.indices) {
+            val filename: String = temperaturesViewModel.getName[item] + ".csv"
+            val file = File(requireContext().getExternalFilesDir(folderName), filename)
+            if (!file.exists()) {
+                Log.e("Generating CSV file", "${temperaturesViewModel.getName[item]}, $item")
+                val csvFile = generateFile(requireContext(), filename, folderName)
+                if (csvFile != null) {
+                    exportToCSVFile(file, temperaturesViewModel.getName[item])
+                }
+            }
+        }
+        Log.e("End export for all", "")
+    }
+
+    private fun generateFile(context: Context, fileName: String, folderName: String): File? {
+        val csvFile = File(context.getExternalFilesDir(folderName), fileName)
+        csvFile.createNewFile()
+
+        return if (csvFile.exists()) {
+            csvFile
+        } else {
+            null
+        }
+    }
+
+    private fun exportToCSVFile(csvFile: File, sensor: String) {
+        csvWriter().open(csvFile, append = false) {
+            // Header
+            writeRow(listOf("path_temp", "value_temp", "path_name", "value_name", "time_stamp", "id"))
+            temperaturesList.forEachIndexed { index, temperatures ->
+                if (temperatures.valueName == sensor) {
+                    writeRow(listOf(temperatures.pathTemp,
+                        temperatures.valueTemp,
+                        temperatures.pathName,
+                        temperatures.valueName,
+                        temperatures.timeStamp,
+                        temperatures.id))
+                        //Log.e("Export to file", "Sensor $sensor, ID: ${temperatures.id}")
+                }
+            }
+        }
+        Log.e("Export to file", "Ended for $sensor")
+    }
+/*
+    private fun exportDatabaseToCSVFile() {
         val filename : String = android.os.Build.BRAND + "_" + android.os.Build.MODEL.toString() + "_" + Calendar.getInstance().time.toString() + ".csv"
         val csvFile = generateFile(requireContext(), filename)
         if (csvFile != null) {
@@ -534,6 +576,7 @@ class TemperaturesDisplayFragment : Fragment() {
         }
         Log.e("EXPORTING TO CSV THREAD", "stop")
     }
+    */
 
     private fun universalFileReader(path: String): String {
         var value: String = "0.0"

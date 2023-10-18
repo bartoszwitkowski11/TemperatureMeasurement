@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class TemperaturesRepository(private val temperaturesDao: TemperaturesDao) {
     val allTemperatures: Flow<List<Temperatures>> = temperaturesDao.getTemperatures()
+    val SensorName: Array<String> = temperaturesDao.getName()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

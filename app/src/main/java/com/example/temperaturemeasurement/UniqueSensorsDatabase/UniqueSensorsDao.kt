@@ -32,6 +32,9 @@ interface UniqueSensorsDao {
     @Query("SELECT path_temp FROM unique_working_sensors ORDER BY valueName ASC")
     fun getPathTemp(): Array<String>
 
+    @Query("SELECT valueName FROM unique_working_sensors ORDER BY valueName ASC")
+    fun getName(): Array<String>
+
     @Query("SELECT to_read FROM unique_working_sensors ORDER BY valueName ASC")
     fun getToRead(): Array<Boolean>
 

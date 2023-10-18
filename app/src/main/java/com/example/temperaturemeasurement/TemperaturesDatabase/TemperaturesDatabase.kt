@@ -45,6 +45,7 @@ abstract class TemperaturesDatabase  : RoomDatabase() {
                     TemperaturesDatabase::class.java,
                     "temperature_results_database"
                 )
+                    .allowMainThreadQueries()
                     .addCallback(TemperaturesDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance

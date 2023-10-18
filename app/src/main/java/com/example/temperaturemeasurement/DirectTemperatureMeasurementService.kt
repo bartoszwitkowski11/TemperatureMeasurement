@@ -128,7 +128,7 @@ class DirectTemperatureMeasurementService : Service() {
 
                     val file = File(pathTemp)
                     if (file.exists()) {
-                        val temp = (universalFileReader(pathTemp).toDouble() / 1000).toString()
+                        val temp = (universalFileReader(pathTemp).toDouble() / 10).toString()
                         val timestamp = System.currentTimeMillis() / 1000
                         val type = universalFileReader(pathType)
 
@@ -149,11 +149,7 @@ class DirectTemperatureMeasurementService : Service() {
 
     private suspend fun otherParameters() {
         val batteryStats = getBatteryPercentage().toString()
-        val insertBattery = Temperatures("Battery",
-            batteryStats,
-            "Battery",
-            "Battery percentage",
-            (System.currentTimeMillis() / 1000))
+        val insertBattery = Temperatures("Battery", batteryStats, "Battery", "Battery_percentage", (System.currentTimeMillis() / 1000))
 
         daoTemperatures.insert(insertBattery)
 
@@ -161,13 +157,8 @@ class DirectTemperatureMeasurementService : Service() {
             val pathFreq = cpu_freq[item]
             val file = File(pathFreq)
             if (file.exists()) {
-                val freq_value =
-                    ((universalFileReader(pathFreq)).toDouble() / 1000).toString()
-                val insert = Temperatures(pathFreq,
-                    freq_value,
-                    pathFreq,
-                    "CPU $item",
-                    (System.currentTimeMillis() / 1000))
+                val freq_value = ((universalFileReader(pathFreq)).toDouble() / 1000).toString()
+                val insert = Temperatures(pathFreq, freq_value, pathFreq, "CPU_freq_$item", (System.currentTimeMillis() / 1000))
                 daoTemperatures.insert(insert)
             }
         }
@@ -176,21 +167,9 @@ class DirectTemperatureMeasurementService : Service() {
         val nativeHeapSize = memoryInfo.totalMem / 1000000
         val nativeHeapFreeSize = memoryInfo.availMem / 1000000
         val usedMemInBytes = nativeHeapSize - nativeHeapFreeSize
-        val usedMemInPercentage = usedMemInBytes * 100 / nativeHeapSize
 
-        val insert = Temperatures("totalMem: $nativeHeapSize", "nativeHeapFreeSize: $nativeHeapFreeSize", "usedMemInBytes: $usedMemInBytes", "usedMemInPercentage: $usedMemInPercentage", (System.currentTimeMillis() / 1000))
+        val insert = Temperatures("totalMem: $nativeHeapSize", usedMemInBytes.toString(),"nativeHeapFreeSize: $nativeHeapFreeSize", "Memory_usage", (System.currentTimeMillis() / 1000))
         daoTemperatures.insert(insert)
-
-        val process = Runtime.getRuntime().exec("top -bn1 -m 5")
-        val top = BufferedReader(InputStreamReader(process.inputStream))
-        var topArray = top.lines().toArray()
-        top.close()
-
-        for (iter in topArray.indices) {
-            var topString = topArray[iter].toString()
-            val insert = Temperatures("Top", topString, "Top", "Line: $iter", (System.currentTimeMillis() / 1000))
-            daoTemperatures.insert(insert)
-        }
     }
 
     private fun getBatteryPercentage(): Int {

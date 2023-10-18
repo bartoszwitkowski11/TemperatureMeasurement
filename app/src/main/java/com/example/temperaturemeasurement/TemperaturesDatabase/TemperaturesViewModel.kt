@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 
 class TemperaturesViewModel(private val repository: TemperaturesRepository) : ViewModel() {
     val allTemperatures: LiveData<List<Temperatures>> = repository.allTemperatures.asLiveData()
+    val getName: Array<String> = repository.SensorName
 
     fun getTemperaturesList(): List<Temperatures> {
         return repository.getAllData()

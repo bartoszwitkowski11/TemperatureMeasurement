@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     fun settingsToDb(function: String) {
         val timestamp = System.currentTimeMillis() / 1000
-        val insert = Temperatures(" ", "App state: $function", " ", " ", timestamp)
+        val insert = Temperatures(" ", "App state: $function", " ", "App_state", timestamp)
         temperaturesViewModel.insert(insert)
     }
 

@@ -7,6 +7,7 @@ class UniqueSensorsRepository(private val sensorsDao: UniqueSensorsDao) {
     val allSensors: Flow<List<UniqueSensors>> = sensorsDao.getSensors()
     val PathName: Array<String> = sensorsDao.getPathName()
     val PathTemp: Array<String> = sensorsDao.getPathTemp()
+    val SensorName: Array<String> = sensorsDao.getName()
     val ToRead: Array<Boolean> = sensorsDao.getToRead()
 
     @Suppress("RedundantSuspendModifier")

@@ -14,6 +14,9 @@ interface TemperaturesDao {
     @Query("DELETE FROM temperature_measurement_results")
     suspend fun deleteAll()
 
+    @Query("SELECT value_name FROM temperature_measurement_results")
+    fun getName(): Array<String>
+
     @Query("SELECT * FROM temperature_measurement_results ORDER BY id ASC")
     fun getTemperatures(): Flow<List<Temperatures>>
 
