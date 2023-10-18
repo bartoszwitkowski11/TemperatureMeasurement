@@ -1,4 +1,4 @@
-# TemperatureMeasurement
+# TemperatureMeasurement for Android
 TL;DR: App reads temperature values from sensors built-in the device.
 
 **Functions description**
