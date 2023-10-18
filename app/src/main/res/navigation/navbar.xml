@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navbar"
+    app:startDestination="@id/temperaturesDisplayFragment">
+
+    <fragment
+        android:id="@+id/temperaturesDisplayFragment"
+        android:name="com.example.temperaturemeasurement.TemperaturesDisplayFragment"
+        android:label="temperatures_read_list"
+        tools:layout="@layout/temperatures_read_list" >
+        <action
+            android:id="@+id/action_temperaturesDisplayFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.temperaturemeasurement.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" >
+        <action
+            android:id="@+id/action_aboutFragment_to_temperaturesDisplayFragment"
+            app:destination="@id/temperaturesDisplayFragment" />
+    </fragment>
+</navigation>

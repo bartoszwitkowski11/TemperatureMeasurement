@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">TemperatureMeasurement</string>
+    <string name="tempName">tempName</string>
+    <string name="tempValue">tempValue</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_first_launch">FirstLaunch</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="work">"There are implemented two different approaches to read temperatures from your device. Some devices have direct access to system files that stores temperatures. These devices are using something I call  "Direct Read Method". It reads temps from files and put them into database. As the device might have many sensors (or many places where data from sensors are stored, sometimes even the same parameters) that are not needed, there is implemented way to turn on and off reading from some sensors.
+
+Other way to read temperatures is to use special command which is normally accessible on your device from Android Debug Bridge (ADB) in your computer. The purpose of the app is to be free from any other devices and additional cables etc. So I have developed another way of reading temps. I call it "Alternative Read Method". It uses command dumpsys thermalservice which returns temperatures values from the most important sensors in the device. It returns them in string, so the app is searching in the string only for the data I am interested in, such as sensor name and temperature value. This way I am able to get temp readings from all devices that I am going to use for testing. It is possible that some devices won't work with both methods.
+
+Unfortunately, there is a catch with the second method. It is needed to do steps below to achieve successful working.
+    "</string>
+    <string name="permission">"1. Install ADB (https://developer.android.com/studio/releases/platform-tools) and then plug your device through USB cable.
+
+More explanation here: https://www.xda-developers.com/install-adb-windows-macos-linux/
+
+2. Turn on debugging mode in Android "device". If you don't know how to do it, look it up on the internet.
+
+3. Open command line on Windows or Terminal on Linux/macOS.
+
+4. Copy location to your adb.exe, for example:
+C:\u005CUsers\u005Cbartosz.witkowski\u005Cdesktop\u005Cadb\u005Cplatform-tools\u005Cadb.exe
+
+5. Paste it in command line and add "devices", and then press enter.
+
+6. If you get respond with numbers and letters, it means your phone is connected to the computer correctly.
+
+7. Repeat step 4 and also paste this:
+"shell pm grant com.example.temperaturemeasurement android.permission.DUMP", and then press enter.
+
+8. The second method should now work properly. For precaution, you should scan again sensors in the app."</string>
+    <string name="risk">"No! There is 0 chance to damage your device. The above steps are not modifying software on your device in any way! Moreover, commands and software that are used there are intended for collecting data about cpu workload, temperatures, and also checking stability of new devices and apps."</string>
+    <string name="dumpsys">"You can check by yourself! Just input into your command line path to adb.exe and shell dumpsys thermalservice. Briefly, this command returns info about all parameter that are connected with thermal control of the device, for example temperatures of crucial sensors."</string>
+    <string name="line7">"It is needed to grant application proper permission that are not accessible in the System for third-party apps in Android. It means that system apps can use this permission, but apps that are not installed by the vendor can't. Fortunately, it is possible to grant that permission one-time only through the above method. The app is using it ONLY for accessing above command dumpsys thermalservice and nothing more."</string>
+    <string name="created">"Created by Bartosz Witkowski, Poznan University of Technology, 2023
+
+Link to source code: github.com/bartoszwitkowski11"</string>
+
+    <string name="dzialanie">"W aplikacji zaimplementowane są dwa różne podejścia do odczytu temperatury z urządzenia. Niektóre urządzenia mają bezpośredni dostęp do plików systemowych, które przechowują temperaturę. Ta metoda dostępu do sensorów jest nazwana jako "Bezpośrednia Metoda Odczytu". Odczytuje ona temperatury z plików i umieszcza je w bazie danych. Ponieważ urządzenia mogą mieć wiele różnych sensorów lub miejsc, w których przechowują dane z tych sensorów, zaimplementowano możliwość wyłączenia i włączenia odczytu z tychże sensorów.
+
+Inną metodą odczytu danych jest wykorzystanie specjalnej komendy, która normalnie jest dostępna za pośrednictwem Android Debug Bridge (ADB) po podłączeniu telefonu do komputera. Celem stworzenia aplikacji między innymi było "uwolnienie" się od wszelkich ograniczeń w postaci dodatkowych urządzeń pomiarowych i kabli. Dlatego stworzyłem alternatywny sposób pomiaru temperatur. Nazwałem go "Alternatywna Metoda Odczytu". Wykorzystuje komendę dumpsys thermalservice, która zwraca wartości temperaturowe z najbardziej kluczowych sensorów w urządzeniu. Ponieważ wartości zwracane są w stringu to najpierw muszę przeszukiwać tekst w poszukiwaniu interesujących mnie wartości jak nazwa sensora oraz wartość temperatury. Dzięki temu jestem w stanie pomierzyć temperatury na wszystkich badanych urządzeniach. Oczywiście istnieje szansa, że na jakimś urządzeniu żadna z powyższych metod nie będzie działać.
+Niestety, do drugiej metody wymagane jest wykonanie dodatkowych kroków, aby umożliwić prawidłowe działanie aplikacji."</string>
+    <string name="pozwolenie">"1. Zainstalowanie ADB (https://developer.android.com/studio/releases/platform-tools) oraz podłączenie urządzenia za pomocą kabla USB.
+Więcej wytłumaczono tutaj (po angielsku): https://www.xda-developers.com/install-adb-windows-macos-linux/
+2. Włączenie trybu debugowania w urządzeniu z Androidem. Również wyjaśnione wyżej.
+
+3. Otwarcie wiersza poleceń w systemie Windows lub Terminala na Linuxie/MacOS.
+
+4. Skopiuj lokalizację do pliku adb.exe np.
+C:\u005CUsers\u005Cbartosz.witkowski\u005Cdesktop\u005Cadb\u005Cplatform-tools\u005Cadb.exe
+
+5. Wklej lokalizację do wiersza poleceń oraz dodaj "devices" na końcu linijki i wciśnij enter.
+
+6. Jeżeli wiersz poleceń zwróci linijkę z liczbami i literami, oznacza to, że telefon jest podłączony prawidłowo.
+
+7. Powtórz krok 4 i wklej: "shell pm grant com.example.temperaturemeasurement android.permission.DUMP", a następnie kliknij enter.
+
+8. Druga metoda od teraz powinna działać prawidłowo. Warto ponownie przeskanować dostępne sensory w aplikacji."</string>
+    <string name="ryzyko">"Absolutnie nie, nie ma w ogóle takiej możliwości. W żaden sposób nie modyfikujemy oprogramowania i programów zainstalowanych na urządzeniu. Wykorzystywane przez nas narzędzia są stosowane do zbierania danych np. na temat zużycia procesora, temperatury, a także służą do testowania, sprawdzania działania i stabilności urządzeń oraz aplikacji."</string>
+    <string name="dumpsysPL">"Jeżeli interesuje Cię, co zwraca ta komenda, możesz sprawdzić sam/a wpisując w wiersz poleceń ścieżkę do pliku adb.exe oraz shell dumpsys thermalservice. W skrócie zwraca ona wszystkie parametry związane z kontrolą termiczną urządzenia, a więc m.in. temperatury z kluczowych sensorów."</string>
+    <string name="linia7">"Ta linijka jest wymagana, aby nadać odpowiednie uprawnienia, które nie są dostępne dla aplikacji, które nie są aplikacjami systemowymi (nie zostały zainstalowane przez producenta urządzenia). Tylko aplikacje systemowe mogą żądać tego uprawnienia w systemie Android. Inaczej uprawnienie nie zostanie przydzielone. Na szczęście dzięki jednorazowemu wpisaniu tej komendy przy użyciu komputera i ADB nadajemy potrzebne uprawnienie dostępu aplikacji. To uprawnienie jest wykorzystywane TYLKO i wyłącznie do odczytu komendy dumpsys thermalservice."</string>
+    <string name="stworzono">"Stworzono przez Bartosza Witkowskiego, Politechnika Poznańska, 2023
+
+Link do kodu źródłowego: github.com/bartoszwitkowski11"</string>
+    <string name="functions">"On the main screen:
+
+Thread - turning on this option creates a thread for recording method. It may help with measuring in the background.
+
+Displaying - displays data on the app main screen
+
+Wakelock - suspends cpu from falling asleep while screen is off. It may help with measuring in the background.
+
+Interval - changes intervals between temperatures readings. Format of the input should be in milliseconds (1000 ms = 1s)
+
+In settings that are hidden under three dots at the top of the screen:
+
+Export db to .csv file - exports readings to csv. file. Typical location is Android/data/com.example.temperaturemeasurement/files.
+
+Scan available sensors - it scans available sensors and methods.
+
+Delete database - as name says, it deletes the entire database.
+
+Battery Optimization - opens up battery optimization settings."</string>
+    <string name="funkcje">"Na ekranie głównym:
+
+Thread (wątek) - włączenie tej opcji powoduje, że metoda pomiarowa jest uruchamiana we własnym wątku. Może pomóc z pomiarem w tle.
+
+Displaying (wyświetlanie) - opcja ta odpowiada za wyświetlanie pomiaru w aplikacji, nie wpływa na sam pomiar.
+
+Wakelock (zablokowanie uśpienia) - włączenie tej opcji spowoduje wymuszenie nieusypiania procesora. Również może pomóc z pomiarem w tle.
+
+Interval (interwał) - zmiana odstępu czasowego pomiędzy kolejnymi pomiarami. Należy wprowadzać czas w milisekundach (1000 ms = 1 s).
+
+W Ustawieniach ukrytych pod 3 kropkami na górze ekranu:
+
+Export db to .csv file - Jest to eksportowanie bazy danych do zewnętrznego pliku, którego lokalizacja wyświetlana jest na dole ekranu podczas eksportu. Zwykle jest to Android/data/com.example.temperaturemeasurement/files.
+
+Scan available sensors - Opcja ta skanuje dostępne sensory i sprawdza dostępne metody pomiarowe.
+
+Delete database - kasowanie bazy danych.
+
+Battery Optimization - opcja ta przenosi użytkownika do ustawień oszczędzania baterii."</string>
+
+
+</resources>
